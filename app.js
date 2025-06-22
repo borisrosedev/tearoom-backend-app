@@ -7,6 +7,7 @@ const authRoutes = require('./app/routes/authRoutes')
 const filesRoutes = require('./app/routes/filesRoutes')
 const cartsRoutes = require('./app/routes/cartsRoutes')
 const { connectDB } = require('./app/database/connectDb')
+
 dotenv.config({
     path: path.join(__dirname, ".env")
 })
@@ -14,8 +15,6 @@ dotenv.config({
 const app = express()
 
 connectDB()
-
-
 
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json({ limit: '10mb' }))

@@ -5,6 +5,7 @@ const dotenv = require("dotenv")
 const path = require("path")
 const fs = require("fs")
 const emptyStringDeleter = require("../utils/emptyStringDeleter")
+const websocketService = require("../services/websocketService")
 dotenv.config({
     path: path.join(__dirname, "../../.env")
 })
@@ -18,7 +19,7 @@ module.exports = {
   
         await tryCatch(async function(){
             const newUser = await User.create({ firstName, lastName, email, password, photo: req.file.filename })
-            
+            websocketService.send('new_user', { message:`Welcome to ${newUser.firstName} who has just joined us`})
             return res.status(201).json({ user : newUser })
         }, res)
 

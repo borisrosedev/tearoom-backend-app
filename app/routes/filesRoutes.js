@@ -1,11 +1,9 @@
 const { Router } = require('express')
 const path = require('path')
+const { getOneById } = require('../controllers/filesController')
 const route = Router()
 
-route.get('/photos/:id', (req, res) => {
-    const { id } = req.params
-    return res.sendFile(path.join(__dirname, '../../uploads/' + id))
-})
+route.get('/photos/:id', getOneById)
 
 
 module.exports = route
