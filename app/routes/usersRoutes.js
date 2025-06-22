@@ -24,7 +24,8 @@ route.get('/',
 route.put('/',   
     authMiddleware.hasAuthorizationHeader, 
     authMiddleware.hasToken, 
-    authMiddleware.isTokenValid, 
+    authMiddleware.isTokenValid,
+    upload.single('photo'), 
     updateOneByEmail
 )
 

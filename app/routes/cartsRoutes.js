@@ -12,7 +12,7 @@ route.get('/me',
 )
 
 
-route.post('/',    
+route.get('/',    
     authMiddleware.hasAuthorizationHeader, 
     authMiddleware.hasToken, 
     authMiddleware.isTokenValid,

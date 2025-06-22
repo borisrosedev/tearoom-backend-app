@@ -13,8 +13,18 @@ module.exports = {
         
         await tryCatch(async function(){
             const { id } = req.tokenPayload
-        
-            const cart = await Cart.create({ content: null, userId: id})
+            
+            const oldCart = await Cart.findOne({
+                where: {
+                    userId: id
+                }
+            })
+
+            if(oldCart){
+                return res.status(400).json({ message: "You already have a cart"})
+            }
+
+            const cart = await Cart.create({ content: [], userId: id})
     
             return res.status(201).json({ cart })
         }, res)
@@ -47,7 +57,7 @@ module.exports = {
                 }
             })
 
-            return res.status(200).json({ mesage: "cart destroyed ", numberOfDestroyedRows})
+            return res.status(200).json({ message: "cart destroyed ", numberOfDestroyedRows})
 
         }, res)
     },
@@ -59,7 +69,9 @@ module.exports = {
             const cart = await Cart.findOne({ where: { 
                 userId: id
             }})
-
+            
+         
+       
             const updatedCart = await cart.update({
                 content: data
             })

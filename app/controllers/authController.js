@@ -9,7 +9,7 @@ module.exports = {
 
     async login(req, res){
         const { email, password } = req.body
-
+  
         await tryCatch(async function(){
 
             const user = await User.findOne({
@@ -30,7 +30,7 @@ module.exports = {
             }
 
             const token = generateToken({ email: user.email , role : user.role, id: user.id })
-            console.log(token)
+
             return res.status(201).json({ token })
         }, res)
 

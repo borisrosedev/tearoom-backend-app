@@ -43,12 +43,18 @@ module.exports = {
     } ,
     isTokenValid(req, res, next) {
         const { token } = req
-        const payload = getTokenPayload(token)
-        if(!("email" in payload && "role" in payload)){
-            return res.status(401).json({ message: 'invalid token' })
+        try {
+            const payload = getTokenPayload(token)
+            if(!("email" in payload && "role" in payload)){
+                return res.status(401).json({ message: 'invalid token' })
+            }
+            req.tokenPayload = payload
+            next()
+        } catch (err) {
+            return res.status(401).json({ message: 'invalid token', err})
         }
-        req.tokenPayload = payload
-        next()
+       
+  
     }
 
 

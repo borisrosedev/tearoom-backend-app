@@ -21,8 +21,8 @@ module.exports = {
         return jwt.sign(data, process.env.SECRET_KEY, { expiresIn: '1000000', algorithm: 'HS256'})
     },
 
-    getTokenPayload(token){
-        return jwt.verify(token, process.env.SECRET_KEY)
+    getTokenPayload(token){      
+        return jwt.verify(token, process.env.SECRET_KEY)  
     }
 
 }

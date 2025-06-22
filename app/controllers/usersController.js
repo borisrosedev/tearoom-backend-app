@@ -3,6 +3,8 @@ const { User } = require('../database/models')
 const tryCatch = require("../utils/tryCatch")
 const dotenv = require("dotenv")
 const path = require("path")
+const fs = require("fs")
+const emptyStringDeleter = require("../utils/emptyStringDeleter")
 dotenv.config({
     path: path.join(__dirname, "../../.env")
 })
@@ -51,7 +53,7 @@ module.exports = {
 
     async updateOneByEmail(req, res) {
         const { email, role } = req.tokenPayload
-
+        const hasFile = req.file ? true : false;
         await tryCatch(async function(){
 
             const data = req.body 
@@ -61,7 +63,19 @@ module.exports = {
                 }
             })
 
-            await user.update({ ...data, role: "user" })
+            console.log("data", data)
+            const newUser = Object.assign({}, data)
+            const newUserWithoutNullValue = emptyStringDeleter(newUser)
+            console.log('newUser', newUserWithoutNullValue)
+            if(!hasFile){
+                await user.update({ ...newUserWithoutNullValue, role: "user" })
+            } else {
+                const exPhotoPath = path.join(__dirname, "../../uploads", user.photo)
+                console.log("ex", exPhotoPath)
+                fs.rmSync(exPhotoPath)
+                await user.update({ ...newUserWithoutNullValue, photo: req.file.filename, role: "user" })
+            }
+         
             return res.status(200).json({ user })
         }, res)
 
@@ -78,7 +92,7 @@ module.exports = {
                 }
             })
 
-            return res.status(200).json({ mesage: "user destroyed ", numberOfDestroyedRows})
+            return res.status(200).json({ message: "user destroyed", numberOfDestroyedRows})
         }, res)
     }
 
